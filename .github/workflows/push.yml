@@ -133,14 +133,14 @@ jobs:
         fi
       if: steps.is-modified.outputs.modified == 'true' || (github.event_name == 'push' && github.event.ref == 'refs/heads/re-builld-all')
     - run: |
-        docker tag ${{ matrix.image }} ${{ github.event.repository.owner.name}}/${{ matrix.image }}
-        docker tag ${{ matrix.image }} ghcr.io/${{ github.event.repository.owner.name }}/${{ github.event.repository.name }}/${{ matrix.image }}
+        docker tag ${{ matrix.image }} ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.image }}
+        docker tag ${{ matrix.image }} ghcr.io/${{ secrets.DOCKER_HUB_USERNAME }}/${{ github.event.repository.name }}/${{ matrix.image }}
         if [ -e "${{ matrix.image }}/tags.yaml" ]; then
           for tag in $(cat "${{ matrix.image }}/tags.yaml" | docker run --rm -i whalebrew/yq  -r '.versions[]'); do
-            docker tag ${{ matrix.image }}:${tag} ${{ github.event.repository.owner.name}}/${{ matrix.image }}:${tag}
-            docker tag ${{ matrix.image }}:${tag} ghcr.io/${{ github.event.repository.owner.name }}/${{ github.event.repository.name }}/${{ matrix.image }}:${tag}
-            docker push ${{ github.event.repository.owner.name}}/${{ matrix.image }}:${tag}
-            docker push ghcr.io/${{ github.event.repository.owner.name}}/${{ github.event.repository.name }}/${{ matrix.image }}:${tag}
+            docker tag ${{ matrix.image }}:${tag} ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.image }}:${tag}
+            docker tag ${{ matrix.image }}:${tag} ghcr.io/${{ secrets.DOCKER_HUB_USERNAME }}/${{ github.event.repository.name }}/${{ matrix.image }}:${tag}
+            docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.image }}:${tag}
+            docker push ghcr.io/${{ secrets.DOCKER_HUB_USERNAME }}/${{ github.event.repository.name }}/${{ matrix.image }}:${tag}
           done
         fi
         
