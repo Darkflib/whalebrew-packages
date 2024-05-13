@@ -39,7 +39,7 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
     - run: |
         echo ::group::build image ${{ inputs.image }}:latest
           docker build -t ${{ inputs.image }} ${{ inputs.image }}

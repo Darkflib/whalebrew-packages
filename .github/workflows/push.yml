@@ -115,7 +115,7 @@ jobs:
         # github username
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - uses: actions-go/modified@master
+    - uses: darkflib/modified@master
       id: is-modified
       with:
         pattern: ${{ matrix.image }}/**
