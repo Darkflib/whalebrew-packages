@@ -70,8 +70,8 @@ jobs:
           for tag in $(cat "${{ inputs.image }}/tags.yaml" | docker run --rm -i whalebrew/yq  -r '.versions[]'); do
             docker tag ${{ inputs.image }}:${tag} ${{ inputs.owner}}/${{ inputs.image }}:${tag}
             docker tag ${{ inputs.image }}:${tag} ghcr.io/${{ inputs.owner }}/${{ github.event.repository.name }}/${{ inputs.image }}:${tag}
-            docker push ${{ inputs.owner }}/${{ inputs.image }}:${tag}
-            docker push ghcr.io/${{ inputs.owner}}/${{ github.event.repository.name }}/${{ inputs.image }}:${tag}
           done
         fi
+        docker push ${{ inputs.owner }}/${{ inputs.image }}:${tag}
+        docker push ghcr.io/${{ inputs.owner}}/${{ github.event.repository.name }}/${{ inputs.image }}:${tag}
         echo ::endgroup::
