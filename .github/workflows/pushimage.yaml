@@ -4,7 +4,7 @@ on:
     inputs:
       owner:
         type: string
-        default: whalebrew
+        default: darkflib
       image:
         required: true
         type: string
@@ -16,7 +16,7 @@ on:
     inputs:
       owner:
         type: string
-        default: whalebrew
+        default: darkflib
       image:
         required: true
         type: string
@@ -31,7 +31,7 @@ jobs:
     - name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
-        username: whalebrewci
+        username: darkflib
         password: ${{ secrets.DOCKER_HUB_PASSWORD }}
     - name: Login to github container registry
       uses: docker/login-action@v3
