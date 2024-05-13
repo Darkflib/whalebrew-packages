@@ -100,6 +100,7 @@ jobs:
 #            - wget
             - whalesay
 #            - youtube-dl
+            - yt-dlp
 #            - yq
     steps:
     - name: Login to Docker Hub
