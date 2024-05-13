@@ -106,28 +106,30 @@ jobs:
     - name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
-        username: darkflib
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_PASSWORD }}
     - name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
-        username: ${{ github.actor }}
+        username: ${{ github.event.repository.owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - uses: actions-go/modified@master
       id: is-modified
       with:
         pattern: ${{ matrix.image }}/**
+    - run: echo "${{ steps.is-modified.outputs.modified }} ${{ steps.is-modified.outputs.modified-files }}"
+      if: steps.is-modified.outputs.modified == 'true'
     - uses: actions/checkout@v4
       if: steps.is-modified.outputs.modified == 'true' || (github.event_name == 'push' && github.event.ref == 'refs/heads/re-builld-all')
     -
-        # Add support for more platforms with QEMU (optional)
-        # https://github.com/docker/setup-qemu-action
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+      # Add support for more platforms with QEMU (optional)
+      # https://github.com/docker/setup-qemu-action
+      name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
     -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
     - run: |
         echo ::group::build image ${{ matrix.image }}:latest
           docker buildx build -p amd64,arm64v8 -t ${{ matrix.image }} ${{ matrix.image }}
@@ -135,7 +137,7 @@ jobs:
         if [ -e "${{ matrix.image }}/tags.yaml" ]; then
           for tag in $(cat "${{ matrix.image }}/tags.yaml" | docker run --rm -i whalebrew/yq  -r '.versions[]'); do
             echo ::group::build image ${{ matrix.image }}:${tag}
-              docker build -p amd64,arm64v8 -t ${{ matrix.image }}:${tag} --build-arg VERSION=${tag} ${{ matrix.image }}
+              docker buildx build -p amd64,arm64v8 -t ${{ matrix.image }}:${tag} --build-arg VERSION=${tag} ${{ matrix.image }}
             echo ::endgroup::
           done
         fi
